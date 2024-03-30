@@ -1,0 +1,6 @@
+<PROG> -> PROG id <VAR> begin <listst> END / PROG, a, f
+<VAR> -> VAR <idlist> / VAR, ,, re
+<idlist> -> id <A> / id, sd, TRE
+<A> -> , <idlist> | E / ,, a, f
+<listst> -> st <B> / st
+<B> -> <listst> | E / END
