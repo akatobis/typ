@@ -106,7 +106,6 @@ public class TableCreator
                     }
                     else
                     {
-                        toStack = true;
                         guideSet.AddRange(Grammar[indexGrammar].GuideSet);
                     }
 
