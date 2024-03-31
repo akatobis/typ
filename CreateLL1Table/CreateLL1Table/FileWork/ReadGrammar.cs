@@ -4,7 +4,7 @@ namespace CreateLL1Table.FileWork;
 
 public class ReadGrammar
 {
-    private const string FilePath = "../../../../Files/test1.txt";
+    private const string FilePath = "../../../../Files/test2.txt";
     
     public List<Rule> Read()
     {
