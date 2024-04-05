@@ -14,9 +14,17 @@ public class ReadGrammar
         while (reader.ReadLine() is { } line)
         {
             var symbol = line.Split("->")[0].Trim();
-            var rightPart = line.Split("->")[1].Split("/")[0].Trim().Split(" ").ToList();
-            var guideSet = line.Split("->")[1].Split("/")[1].Trim().Split(", ").ToList();
-            var rule = new Rule(symbol, rightPart, guideSet);
+            var rightPart = line.Split("->")[1].Split("/");//[0].Trim().Split(" ").ToList();
+            var valueGrammar = new List<string>();
+            for (var i = 0; i < rightPart.Length - 1; i++)
+            {
+                var rightPartElem = rightPart[i];
+                if (i > 0) { valueGrammar.Add("/"); }
+                valueGrammar.AddRange(rightPartElem.Trim().Split(" "));
+            }
+            
+            var guideSet = line.Split("->")[1].Split("/")[rightPart.Length - 1].Trim().Split(", ").ToList();
+            var rule = new Rule(symbol, valueGrammar, guideSet);
             grammar.Add(rule);
         }
         
