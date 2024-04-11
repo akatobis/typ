@@ -8,6 +8,9 @@ public static class Printers
     {
         using (StreamWriter writer = new StreamWriter(filePath))
         {
+            var firstStr = "Index;Symbol;GuideSet;Error;Pointer;Shift;ToStack;End";
+            writer.WriteLine(firstStr);
+            
             for (int it = 0; it < tableLL1.Count(); it++)
             {
                 RowTableLL1 row = tableLL1[it];
