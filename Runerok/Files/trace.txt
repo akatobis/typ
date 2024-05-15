@@ -1,11 +1,39 @@
 0 Current symbol: <Z> Stack: 
-a 12 Current symbol: <E> Stack: 
-a 1 Current symbol: <E> Stack: 13
-a 14 Current symbol: <T> Stack: 13
-a 4 Current symbol: <T> Stack: 15 13
-a 20 Current symbol: <F> Stack: 15 13
-a 7 Current symbol: <F> Stack: 21 15 13
-a 31 Current symbol: a Stack: 21 15 13
+( 12 Current symbol: <E> Stack: 
+( 1 Current symbol: <E> Stack: 13
+( 14 Current symbol: <T> Stack: 13
+( 4 Current symbol: <T> Stack: 15 13
+( 20 Current symbol: <F> Stack: 15 13
+( 7 Current symbol: <F> Stack: 21 15 13
+( 28 Current symbol: ( Stack: 21 15 13
+( 29 Current symbol: <E> Stack: 21 15 13
+( 1 Current symbol: <E> Stack: 30 21 15 13
+( 14 Current symbol: <T> Stack: 30 21 15 13
+( 4 Current symbol: <T> Stack: 15 30 21 15 13
+( 20 Current symbol: <F> Stack: 15 30 21 15 13
+( 7 Current symbol: <F> Stack: 21 15 30 21 15 13
+( 28 Current symbol: ( Stack: 21 15 30 21 15 13
+a 29 Current symbol: <E> Stack: 21 15 30 21 15 13
+a 1 Current symbol: <E> Stack: 30 21 15 30 21 15 13
+a 14 Current symbol: <T> Stack: 30 21 15 30 21 15 13
+a 4 Current symbol: <T> Stack: 15 30 21 15 30 21 15 13
+a 20 Current symbol: <F> Stack: 15 30 21 15 30 21 15 13
+a 7 Current symbol: <F> Stack: 21 15 30 21 15 30 21 15 13
+a 31 Current symbol: a Stack: 21 15 30 21 15 30 21 15 13
+) 21 Current symbol: <B> Stack: 15 30 21 15 30 21 15 13
+) 5 Current symbol: <B> Stack: 15 30 21 15 30 21 15 13
+) 22 Current symbol: e Stack: 15 30 21 15 30 21 15 13
+) 15 Current symbol: <A> Stack: 30 21 15 30 21 15 13
+) 2 Current symbol: <A> Stack: 30 21 15 30 21 15 13
+) 16 Current symbol: e Stack: 30 21 15 30 21 15 13
+) 30 Current symbol: ) Stack: 21 15 30 21 15 13
+) 21 Current symbol: <B> Stack: 15 30 21 15 13
+) 5 Current symbol: <B> Stack: 15 30 21 15 13
+) 22 Current symbol: e Stack: 15 30 21 15 13
+) 15 Current symbol: <A> Stack: 30 21 15 13
+) 2 Current symbol: <A> Stack: 30 21 15 13
+) 16 Current symbol: e Stack: 30 21 15 13
+) 30 Current symbol: ) Stack: 21 15 13
 # 21 Current symbol: <B> Stack: 15 13
 # 5 Current symbol: <B> Stack: 15 13
 # 22 Current symbol: e Stack: 15 13
