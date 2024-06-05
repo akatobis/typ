@@ -42,4 +42,9 @@ public class Lexer
         if (_tokenIndex + 1 == _tokens.Count) return null;
         return _tokens[_tokenIndex + 1];
     }
+
+    public List<string> GetRemainingTokens()
+    {
+        return _tokens.Slice(_tokenIndex, _tokens.Count - _tokenIndex);
+    }
 }
