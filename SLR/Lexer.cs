@@ -31,6 +31,11 @@ public class Lexer
         if (_tokenIndex == _tokens.Count) return null;
         return _tokens[_tokenIndex++];
     }
+
+    public void AddToken(string token)
+    {
+        _tokens.Insert(0, token);
+    }
     
     public string? PickNextToken()
     {
