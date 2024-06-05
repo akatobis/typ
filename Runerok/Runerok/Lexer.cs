@@ -1,9 +1,8 @@
-﻿namespace SLR;
+﻿namespace Runerok;
 
 public class Lexer
 {
     private const string Space = " ";
-    private const string EndOfString = "#";
     private List<string> _tokens;
     private int _tokenIndex;
     
@@ -22,8 +21,16 @@ public class Lexer
                 if (!string.IsNullOrEmpty(word.Trim())) _tokens.Add(word.Trim());
             }
         }
-        
-        _tokens.Add(EndOfString);
+    }
+
+    public int GetTokenIndex()
+    {
+        return _tokenIndex;
+    }
+
+    public int GetExpressionCount()
+    {
+        return _tokens.Count;
     }
 
     public string? GetNextToken()
