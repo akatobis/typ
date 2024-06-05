@@ -1,0 +1,4 @@
+Remaining tokens:, 5, #
+Stack: 0.0
+Remaining tokens:, #
+Stack:  0.0

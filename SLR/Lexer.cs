@@ -37,7 +37,7 @@ public class Lexer
         _tokens.Insert(0, token);
     }
     
-    public string? PickNextToken()
+    public string? PeekNextToken()
     {
         if (_tokenIndex + 1 == _tokens.Count) return null;
         return _tokens[_tokenIndex + 1];
