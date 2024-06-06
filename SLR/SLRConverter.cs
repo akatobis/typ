@@ -3,14 +3,14 @@ using SLR;
 public class CsvParser
 {
     private Dictionary<string, Dictionary<string, string>> table;
-    private Stack<string> states;
+    private Stack<string> stack;
     private readonly StreamWriter _outputWriter;
     private readonly StreamWriter _stackTraceWriter;
 
     public CsvParser(string filePath, string stackTraceFileName, string outputFileName)
     {
         table = ReadCsvFile(filePath);
-        states = new Stack<string>();
+        stack = new Stack<string>();
         _outputWriter = new StreamWriter(outputFileName);
         _stackTraceWriter = new StreamWriter(stackTraceFileName);
     }
@@ -21,24 +21,25 @@ public class CsvParser
         string firstRow = "0.0";
         const string convolution = "-1.-1";
         
-        states.Push(firstRow);
+        stack.Push(firstRow);
         while (true)
         {
             _stackTraceWriter.Write("Remaining tokens:");
-            foreach (var remainingToken in lexer.GetRemainingTokens())
+            var remainingTokens = lexer.GetRemainingTokens(); 
+            foreach (var remainingToken in remainingTokens)
             {
-                _stackTraceWriter.Write($", {remainingToken}");
+                _stackTraceWriter.Write($" '{remainingToken}'");
             }
             _stackTraceWriter.WriteLine();
             _stackTraceWriter.Write("Stack:");
-            foreach (var item in states)
+            foreach (var item in stack)
             {
-                _stackTraceWriter.Write($" {item}");
+                _stackTraceWriter.Write($" '{item}'");
             }
             _stackTraceWriter.WriteLine();
             
-            var currState = states.Peek();
-            var token = lexer.PeekNextToken();
+            var currState = stack.Peek();
+            var token = lexer.PeekCurrToken();
 
             if (token == null)
             {
@@ -51,17 +52,17 @@ public class CsvParser
                 if (value == ok)
                 {
                     _stackTraceWriter.Close();
-                    _outputWriter.WriteLine("False");
+                    _outputWriter.WriteLine("Ok");
                     break;
                 }
                 if (value == convolution)
                 {
                     var rowNumber = currState.Split('.').First();
-                    var rule = rules[int.Parse(rowNumber)];
+                    var rule = rules[int.Parse(rowNumber) - 1];
 
                     for (int i = 0; i < rule.RightPart.Count; ++i)
                     {
-                        states.Pop();
+                        stack.Pop();
                     }
 
                     lexer.AddToken(rule.Symbol);
@@ -69,7 +70,7 @@ public class CsvParser
                 }
                 
                 lexer.GetNextToken();
-                states.Push(value);
+                stack.Push(value);
                 continue;
             }
             

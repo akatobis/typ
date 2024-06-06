@@ -34,13 +34,13 @@ public class Lexer
 
     public void AddToken(string token)
     {
-        _tokens.Insert(0, token);
+        _tokens.Insert(_tokenIndex, token);
     }
     
-    public string? PeekNextToken()
+    public string? PeekCurrToken()
     {
-        if (_tokenIndex + 1 == _tokens.Count) return null;
-        return _tokens[_tokenIndex + 1];
+        if (_tokenIndex == _tokens.Count) return null;
+        return _tokens[_tokenIndex];
     }
 
     public List<string> GetRemainingTokens()
