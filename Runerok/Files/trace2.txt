@@ -1,0 +1,91 @@
+0 Current symbol: <Z> Stack: 
+- 12 Current symbol: <E> Stack: 
+- 1 Current symbol: <E> Stack: 13
+- 14 Current symbol: <T> Stack: 13
+- 4 Current symbol: <T> Stack: 15 13
+- 20 Current symbol: <F> Stack: 15 13
+- 7 Current symbol: <F> Stack: 21 15 13
+- 26 Current symbol: - Stack: 21 15 13
+5 27 Current symbol: <F> Stack: 21 15 13
+5 7 Current symbol: <F> Stack: 21 15 13
+5 33 Current symbol: 5 Stack: 21 15 13
+* 21 Current symbol: <B> Stack: 15 13
+* 5 Current symbol: <B> Stack: 15 13
+* 23 Current symbol: * Stack: 15 13
+- 24 Current symbol: <F> Stack: 15 13
+- 7 Current symbol: <F> Stack: 25 15 13
+- 26 Current symbol: - Stack: 25 15 13
+( 27 Current symbol: <F> Stack: 25 15 13
+( 7 Current symbol: <F> Stack: 25 15 13
+( 28 Current symbol: ( Stack: 25 15 13
+a 29 Current symbol: <E> Stack: 25 15 13
+a 1 Current symbol: <E> Stack: 30 25 15 13
+a 14 Current symbol: <T> Stack: 30 25 15 13
+a 4 Current symbol: <T> Stack: 15 30 25 15 13
+a 20 Current symbol: <F> Stack: 15 30 25 15 13
+a 7 Current symbol: <F> Stack: 21 15 30 25 15 13
+a 31 Current symbol: a Stack: 21 15 30 25 15 13
++ 21 Current symbol: <B> Stack: 15 30 25 15 13
++ 5 Current symbol: <B> Stack: 15 30 25 15 13
++ 22 Current symbol: e Stack: 15 30 25 15 13
++ 15 Current symbol: <A> Stack: 30 25 15 13
++ 2 Current symbol: <A> Stack: 30 25 15 13
++ 17 Current symbol: + Stack: 30 25 15 13
+b 18 Current symbol: <T> Stack: 30 25 15 13
+b 4 Current symbol: <T> Stack: 19 30 25 15 13
+b 20 Current symbol: <F> Stack: 19 30 25 15 13
+b 7 Current symbol: <F> Stack: 21 19 30 25 15 13
+b 32 Current symbol: b Stack: 21 19 30 25 15 13
+) 21 Current symbol: <B> Stack: 19 30 25 15 13
+) 5 Current symbol: <B> Stack: 19 30 25 15 13
+) 22 Current symbol: e Stack: 19 30 25 15 13
+) 19 Current symbol: <A> Stack: 30 25 15 13
+) 2 Current symbol: <A> Stack: 30 25 15 13
+) 16 Current symbol: e Stack: 30 25 15 13
+) 30 Current symbol: ) Stack: 25 15 13
++ 25 Current symbol: <B> Stack: 15 13
++ 5 Current symbol: <B> Stack: 15 13
++ 22 Current symbol: e Stack: 15 13
++ 15 Current symbol: <A> Stack: 13
++ 2 Current symbol: <A> Stack: 13
++ 17 Current symbol: + Stack: 13
+( 18 Current symbol: <T> Stack: 13
+( 4 Current symbol: <T> Stack: 19 13
+( 20 Current symbol: <F> Stack: 19 13
+( 7 Current symbol: <F> Stack: 21 19 13
+( 28 Current symbol: ( Stack: 21 19 13
+( 29 Current symbol: <E> Stack: 21 19 13
+( 1 Current symbol: <E> Stack: 30 21 19 13
+( 14 Current symbol: <T> Stack: 30 21 19 13
+( 4 Current symbol: <T> Stack: 15 30 21 19 13
+( 20 Current symbol: <F> Stack: 15 30 21 19 13
+( 7 Current symbol: <F> Stack: 21 15 30 21 19 13
+( 28 Current symbol: ( Stack: 21 15 30 21 19 13
+a 29 Current symbol: <E> Stack: 21 15 30 21 19 13
+a 1 Current symbol: <E> Stack: 30 21 15 30 21 19 13
+a 14 Current symbol: <T> Stack: 30 21 15 30 21 19 13
+a 4 Current symbol: <T> Stack: 15 30 21 15 30 21 19 13
+a 20 Current symbol: <F> Stack: 15 30 21 15 30 21 19 13
+a 7 Current symbol: <F> Stack: 21 15 30 21 15 30 21 19 13
+a 31 Current symbol: a Stack: 21 15 30 21 15 30 21 19 13
+) 21 Current symbol: <B> Stack: 15 30 21 15 30 21 19 13
+) 5 Current symbol: <B> Stack: 15 30 21 15 30 21 19 13
+) 22 Current symbol: e Stack: 15 30 21 15 30 21 19 13
+) 15 Current symbol: <A> Stack: 30 21 15 30 21 19 13
+) 2 Current symbol: <A> Stack: 30 21 15 30 21 19 13
+) 16 Current symbol: e Stack: 30 21 15 30 21 19 13
+) 30 Current symbol: ) Stack: 21 15 30 21 19 13
+) 21 Current symbol: <B> Stack: 15 30 21 19 13
+) 5 Current symbol: <B> Stack: 15 30 21 19 13
+) 22 Current symbol: e Stack: 15 30 21 19 13
+) 15 Current symbol: <A> Stack: 30 21 19 13
+) 2 Current symbol: <A> Stack: 30 21 19 13
+) 16 Current symbol: e Stack: 30 21 19 13
+) 30 Current symbol: ) Stack: 21 19 13
+# 21 Current symbol: <B> Stack: 19 13
+# 5 Current symbol: <B> Stack: 19 13
+# 22 Current symbol: e Stack: 19 13
+# 19 Current symbol: <A> Stack: 13
+# 2 Current symbol: <A> Stack: 13
+# 16 Current symbol: e Stack: 13
+# 13 Current symbol: # Stack: 

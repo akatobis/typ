@@ -39,29 +39,33 @@ public static class Printers
 
     public static void PrintGrammar(List<Rule> grammar)
     {
-        for (int ig = 0; ig < grammar.Count(); ig++)
+        var filePath = "../../../../Files/outputBEBRA.txt";
+        using (StreamWriter writer = new StreamWriter(filePath))
         {
-            var row = grammar[ig];
-            var strToWrite = "";
+            for (int ig = 0; ig < grammar.Count(); ig++)
+            {
+                var row = grammar[ig];
+                var strToWrite = "";
 
-            strToWrite += row.Symbol + "; ";
-            for (int irp = 0; irp < row.RightPart.Count(); irp++)
-            {
-                strToWrite += row.RightPart[irp];
-                strToWrite += irp == row.RightPart.Count() - 1
-                    ? "; "
-                    : ", ";
-            }
+                strToWrite += $"<{row.Symbol}> -> ";
+                for (int irp = 0; irp < row.RightPart.Count(); irp++)
+                {
+                    strToWrite += row.RightPart[irp];
+                    strToWrite += irp == row.RightPart.Count() - 1
+                        ? " / "
+                        : " ";
+                }
     
-            for (int igs = 0; igs < row.GuideSet.Count(); igs++)
-            {
-                strToWrite += row.GuideSet[igs];
-                strToWrite += igs == row.GuideSet.Count() - 1
-                    ? "; "
-                    : ", ";
-            }
+                for (int igs = 0; igs < row.GuideSet.Count(); igs++)
+                {
+                    strToWrite += row.GuideSet[igs];
+                    strToWrite += igs == row.GuideSet.Count() - 1
+                        ? ""
+                        : ", ";
+                }
     
-            Console.WriteLine(strToWrite);
+                writer.WriteLine(strToWrite);
+            }
         }
     }
 }
