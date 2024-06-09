@@ -6,6 +6,8 @@ public class Creator(string inputFileName, string outputFileName)
     private const string Space = " ";
     private const char LessSymbol = '<';
     private const char MoreSymbol = '>';
+    private const string EmptyTransition = "e";
+    private const string Axiom = "<S>";
     
     private readonly StreamReader _reader = new StreamReader(inputFileName);
     private readonly StreamWriter _writer = new StreamWriter(outputFileName);
@@ -64,12 +66,55 @@ public class Creator(string inputFileName, string outputFileName)
         return _grammar;
     }
 
+    private void AddRulesWithoutEmptyTransitions(ref List<Rule> grammar, Rule rule, string nonTerminal)
+    {
+        var ruleTemp = rule;
+
+        while (ruleTemp.RightPart.Contains(nonTerminal))
+        {
+            ruleTemp.RightPart.Remove(nonTerminal);
+            grammar.Add(ruleTemp);
+        }
+
+        if (ruleTemp.RightPart.Count == 0 && ruleTemp.Symbol == Axiom && !grammar.First().RightPart.Contains(EmptyTransition))
+        {
+            ruleTemp.RightPart.Add(EmptyTransition);
+        }
+        grammar.Add(ruleTemp);
+    }
+
+    private List<Rule> DeleteEmptyTransitions(List<Rule> grammar)
+    {
+        var grammarWithoutEmptyTransitions = new List<Rule>();
+
+        foreach (var rule in grammar)
+        {
+            if (rule.RightPart.Contains(EmptyTransition))
+            {
+                foreach (var ruleWithEmpty in grammar)
+                {
+                    if (ruleWithEmpty.RightPart.Contains(rule.Symbol))
+                    {
+                        AddRulesWithoutEmptyTransitions(ref grammarWithoutEmptyTransitions, ruleWithEmpty, rule.Symbol);
+                    }
+                }
+            }
+            else
+            {
+                grammarWithoutEmptyTransitions.Add(rule);
+            }
+        }
+        
+        return grammarWithoutEmptyTransitions;
+    }
+
     public void AddGuideSetToGrammar()
     {
         ReadGrammar();
 
+        var grammarWithoutEmptyTransitions = DeleteEmptyTransitions(_grammar);
         var grammarWithGuideSet = new List<Rule>();
-        foreach (var rule in _grammar)
+        foreach (var rule in grammarWithoutEmptyTransitions)
         {
             var guideSet = new List<string>();
 

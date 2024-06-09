@@ -47,7 +47,7 @@ public static class Printers
                 var row = grammar[ig];
                 var strToWrite = "";
 
-                strToWrite += $"<{row.Symbol}> -> ";
+                strToWrite += $"{row.Symbol} -> ";
                 for (int irp = 0; irp < row.RightPart.Count(); irp++)
                 {
                     strToWrite += row.RightPart[irp];

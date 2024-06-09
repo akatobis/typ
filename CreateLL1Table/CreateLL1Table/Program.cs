@@ -3,7 +3,7 @@ using CreateLL1Table.Printers;
 using CreateLL1Table.TableWork;
 
 var readGrammar = new ReadGrammar();
-var fileParser = new ReadGrammar.FileParser("../../../../Files/test4.txt", false);
+var fileParser = new ReadGrammar.FileParser("../../../../Files/final_test.txt", false);
 fileParser.ParseLinesToGrammarRules();
 
 var grammar = fileParser.GrammarRules;
