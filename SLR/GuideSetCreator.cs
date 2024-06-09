@@ -7,7 +7,9 @@ public class Creator(string inputFileName, string outputFileName)
     private const char LessSymbol = '<';
     private const char MoreSymbol = '>';
     private const string EmptyTransition = "e";
-    private const string Axiom = "<S>";
+    private const string EndOfStringMark = "#";
+    private string? _axiom;
+    
     
     private readonly StreamReader _reader = new StreamReader(inputFileName);
     private readonly StreamWriter _writer = new StreamWriter(outputFileName);
@@ -53,7 +55,7 @@ public class Creator(string inputFileName, string outputFileName)
             if (rule.Symbol != firstRightPartItem) continue;
 
             var firstElement = rule.RightPart.First();
-            if (!guideSet.Contains(firstElement))
+            if (!guideSet.Contains(firstElement) && firstElement != EmptyTransition)
             {
                 guideSet.Add(firstElement);
                 if (IsNonTerminal(firstElement)) FindFirst(firstElement, ref guideSet);
@@ -66,43 +68,46 @@ public class Creator(string inputFileName, string outputFileName)
         return _grammar;
     }
 
-    private void AddRulesWithoutEmptyTransitions(ref List<Rule> grammar, Rule rule, string nonTerminal)
-    {
-        var ruleTemp = rule;
-
-        while (ruleTemp.RightPart.Contains(nonTerminal))
-        {
-            ruleTemp.RightPart.Remove(nonTerminal);
-            grammar.Add(ruleTemp);
-        }
-
-        if (ruleTemp.RightPart.Count == 0 && ruleTemp.Symbol == Axiom && !grammar.First().RightPart.Contains(EmptyTransition))
-        {
-            ruleTemp.RightPart.Add(EmptyTransition);
-        }
-        grammar.Add(ruleTemp);
-    }
-
     private List<Rule> DeleteEmptyTransitions(List<Rule> grammar)
     {
         var grammarWithoutEmptyTransitions = new List<Rule>();
+        var symbolsWithEmptyTransitions = new List<string>();
 
         foreach (var rule in grammar)
         {
-            if (rule.RightPart.Contains(EmptyTransition))
+            if (rule.RightPart.Contains(EmptyTransition)) symbolsWithEmptyTransitions.Add(rule.Symbol);
+        }
+
+        foreach (var rule in grammar)
+        {
+            if (!rule.RightPart.Contains(EmptyTransition))
             {
-                foreach (var ruleWithEmpty in grammar)
+                grammarWithoutEmptyTransitions.Add(new Rule(rule));
+            }
+        }
+
+        foreach (var symbolWithEmptyTransition in symbolsWithEmptyTransitions)
+        {
+            var newRules = new List<Rule>();
+            
+            foreach (var rule in grammarWithoutEmptyTransitions)
+            {
+                var ruleT = new Rule(rule);
+
+                while (ruleT.RightPart.Contains(symbolWithEmptyTransition))
                 {
-                    if (ruleWithEmpty.RightPart.Contains(rule.Symbol))
+                    ruleT.RightPart.Remove(symbolWithEmptyTransition);
+
+                    if (ruleT.RightPart.Count == 0 && ruleT.Symbol == _axiom)
                     {
-                        AddRulesWithoutEmptyTransitions(ref grammarWithoutEmptyTransitions, ruleWithEmpty, rule.Symbol);
+                        ruleT.RightPart.Add(EmptyTransition);
                     }
+
+                    if (ruleT.RightPart.Count != 0) newRules.Add(new Rule(ruleT));
                 }
             }
-            else
-            {
-                grammarWithoutEmptyTransitions.Add(rule);
-            }
+            
+            grammarWithoutEmptyTransitions.AddRange(newRules);
         }
         
         return grammarWithoutEmptyTransitions;
@@ -111,15 +116,29 @@ public class Creator(string inputFileName, string outputFileName)
     public void AddGuideSetToGrammar()
     {
         ReadGrammar();
+        if (_grammar.Count == 0) return;
+        
+        _axiom = _grammar[0].Symbol;
+        
+        _grammar = DeleteEmptyTransitions(_grammar);
 
-        var grammarWithoutEmptyTransitions = DeleteEmptyTransitions(_grammar);
+        var rightPartForFirstRule = new List<string>
+        {
+            _axiom,
+            EndOfStringMark
+        };
+        var symbolForFirstRule = _axiom.Insert(_axiom.IndexOf(MoreSymbol),"1");
+        var firstRule = new Rule(symbolForFirstRule, rightPartForFirstRule);
+        
+        _grammar.Insert(0, firstRule);
+        
         var grammarWithGuideSet = new List<Rule>();
-        foreach (var rule in grammarWithoutEmptyTransitions)
+        foreach (var rule in _grammar)
         {
             var guideSet = new List<string>();
 
             var firstRightPartItem = rule.RightPart[0];
-            guideSet.Add(firstRightPartItem);
+            if (firstRightPartItem != EmptyTransition) guideSet.Add(firstRightPartItem);
 
             if (IsNonTerminal(firstRightPartItem))
             {
@@ -132,36 +151,36 @@ public class Creator(string inputFileName, string outputFileName)
 
         _grammar = grammarWithGuideSet;
         
-        PrintGrammar();
+        PrintGrammar(_grammar);
         
         CloseFiles();
     }
 
-    private void PrintGrammar()
+    private void PrintGrammar(List<Rule> grammar)
     {
-        foreach (var rule in _grammar)
+        foreach (var rule in grammar)
         {
-            _writer.Write($"{rule.Symbol} -> ");
+            Console.Write($"{rule.Symbol} -> ");
 
             foreach (var rightPartToken in rule.RightPart)
             {
-                _writer.Write($"{rightPartToken} ");
+                Console.Write($"{rightPartToken} ");
             }
 
             if (rule.GuideSet.Count == 0)
             {
-                _writer.WriteLine();
+                Console.WriteLine();
                 continue;
             }
 
-            _writer.Write("/ ");
+            Console.Write("/ ");
             foreach (var guideSetToken in rule.GuideSet)
             {
-                _writer.Write(guideSetToken);
-                if (rule.GuideSet.Last() != guideSetToken) _writer.Write(", ");
+                Console.Write(guideSetToken);
+                if (rule.GuideSet.Last() != guideSetToken) Console.Write(", ");
             }
 
-            _writer.WriteLine();
+            Console.WriteLine();
         }
     }
 }
