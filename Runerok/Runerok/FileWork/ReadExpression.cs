@@ -2,7 +2,7 @@
 
 public class ReadExpression
 {
-    private const string Path = "../../../../Files/expression.txt";
+    private const string Path = "../../../../Files/expression2.txt";
     
     public List<string> Read()
     {

@@ -74,7 +74,7 @@ public class TableCreator
             for (int indexRightPart = 0; indexRightPart < rightPart.Count(); indexRightPart++)
             {
                 var symbol = rightPart[indexRightPart];
-                List<string> guideSet = [];
+                List<string> guideSet = new List<string>();
                 var pointer = -1;
                 var shift = false;
                 var toStack = false;

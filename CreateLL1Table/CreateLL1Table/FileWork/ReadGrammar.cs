@@ -7,7 +7,7 @@ public class ReadGrammar
 {
     public class FileParser(string fileName, bool directionSymbolsExistsInFile)
     {
-        public readonly List<Rule> GrammarRules = [];
+        public readonly List<Rule> GrammarRules = new List<Rule>();
 
         private const char StartTokenCh = '<';
         private const char EndTokenCh = '>';
@@ -18,12 +18,12 @@ public class ReadGrammar
 
         private readonly string[] _lines = ReadFile(fileName);
 
-        private readonly List<string> _tokens = [];
+        private readonly List<string> _tokens = new ();
 
         private static string[] ReadFile(string fileName)
         {
             var fileStream = File.OpenRead(fileName);
-            List<string> result = [];
+            var result = new List<string>();
             string? line;
             using var reader = new StreamReader(fileStream);
             while ((line = reader.ReadLine()) != null)
@@ -65,18 +65,21 @@ public class ReadGrammar
         {
             ParseTokens();
 
-            for (int i = 0; i < _lines.Length; i++)
+            for (var i = 0; i < _lines.Length; i++)
             {
-                Rule grammarRule = new(_tokens[i], [], []);
+                Rule grammarRule = new Rule(_tokens[i], new List<string>(), new List<string>());
 
-                int startPos = _tokens[i].Length + 2 + LineSeparationLength;
-                string line = _lines[i][startPos..];
+                var startPos = _tokens[i].Length + 3 + LineSeparationLength;
+                var line = _lines[i][startPos..];
 
-                grammarRule.RightPart = ParseChainSymbols(line);
+                grammarRule.RightPart = ParseRightPart(line);
                 
                 GrammarRules.Add(grammarRule);
             }
-            GrammarRules.Insert(0, new Rule(ReplacedMark + GrammarRules[0].Symbol, [GrammarRules[0].Symbol, EndSymbol], []));
+            GrammarRules.Insert(0, 
+                new Rule(ReplacedMark + GrammarRules[0].Symbol,
+                    new List<string>{GrammarRules[0].Symbol, EndSymbol}, 
+                    new List<string>{}));
 
             FixLeftRecursive();
             
@@ -88,72 +91,72 @@ public class ReadGrammar
 
         private void FixLeftRecursive()
         {
-            List<Rule> ruleыWithLeftRecursion = GrammarRules.FindAll(HasLeftRecursion);
-            List<Rule> rulesPassed = [];
-            foreach (Rule grammarRule in ruleыWithLeftRecursion)
+            var rulesWithLeftRecursion = GrammarRules.FindAll(HasLeftRecursion);
+            var rulesPassed = new List<Rule>();
+            foreach (var grammarRule in rulesWithLeftRecursion)
             {
                 RemoveLeftRecursion(grammarRule, rulesPassed);
                 rulesPassed.Add(grammarRule);
             }
         }
 
-        public void RemoveLeftRecursion(Rule rule, List<Rule> rulesPassed)
+        private void RemoveLeftRecursion(Rule rule, List<Rule> rulesPassed)
         {
-            if (HasLeftRecursion(rule))
+            if (!HasLeftRecursion(rule)) 
+                return;
+            
+            var newToken = rule.Symbol + ReplacedMark;
+
+            var rules = GrammarRules.FindAll(x => x.Symbol == rule.Symbol && !HasLeftRecursion(x));
+
+            if (rules.Count == 0)
             {
-                string newToken = rule.Symbol + ReplacedMark;
-
-                var rules = GrammarRules.FindAll(x => x.Symbol == rule.Symbol && !HasLeftRecursion(x));
-
-                if(rules.Count == 0)
-                {
-                    throw new Exception("Can't remove left recursion");
-                }
-
-                Rule newRuleForRemoveLeftRecursion = new(newToken, new(rule.RightPart.GetRange(1, rule.RightPart.Count - 1)), new(rule.GuideSet));
-                newRuleForRemoveLeftRecursion.RightPart.Add(newToken);
-
-                GrammarRules[GrammarRules.IndexOf(rule)] = newRuleForRemoveLeftRecursion;
-
-                if(rulesPassed.FindAll(x => x.Symbol == rule.Symbol).Count > 0)
-                {
-                    return;
-                }
-
-                Rule ruleWithoutLeftRecursion = new (rules[0].Symbol, [], new(rule.GuideSet));
-                for (int i = 0; i < rules.Count; i++)
-                {
-                    ruleWithoutLeftRecursion = rules[i];
-
-                    if (ruleWithoutLeftRecursion.RightPart.Count == 0 )
-                    {
-                        continue;
-                    }
-
-                    Rule newRule;
-                    if (ruleWithoutLeftRecursion.RightPart[0] == EmptySymbol)
-                    {
-                        newRule = new(rule.Symbol, [], new(rule.GuideSet));
-                        newRule.RightPart.AddRange(newRuleForRemoveLeftRecursion.RightPart);
-
-                        if (rules.FindAll(x => x.RightPart[0] != EmptySymbol).Count == 0)
-                        {
-                            GrammarRules.Insert(GrammarRules.IndexOf(ruleWithoutLeftRecursion) + 1, newRule);
-                        }
-
-                        continue;
-                    }
-
-                    newRule = new(ruleWithoutLeftRecursion.Symbol, new(ruleWithoutLeftRecursion.RightPart), new(rule.GuideSet)); 
-                    newRule.RightPart.Add(newToken);
-
-                    GrammarRules[GrammarRules.IndexOf(ruleWithoutLeftRecursion)] = newRule;
-                }
-
-                Rule epsilonRule = new(newToken, ["e"], new(rule.GuideSet));
-
-                GrammarRules.Insert(GrammarRules.IndexOf(GrammarRules.FindLast(x => x.Symbol == newToken))+1, epsilonRule);
+                throw new Exception("Не убирается левая рекурсия. Сам делай");
             }
+
+            var newRuleForRemoveLeftRecursion = new Rule(newToken, new(rule.RightPart.GetRange(1, rule.RightPart.Count - 1)), new List<string>());
+            newRuleForRemoveLeftRecursion.RightPart.Add(newToken);
+
+            GrammarRules[GrammarRules.IndexOf(rule)] = newRuleForRemoveLeftRecursion;
+
+            if(rulesPassed.FindAll(x => x.Symbol == rule.Symbol).Count > 0)
+            {
+                return;
+            }
+
+            var ruleWithoutLeftRecursion = new Rule(rules[0].Symbol, new List<string>(), new List<string>());
+            for (int i = 0; i < rules.Count; i++)
+            {
+                ruleWithoutLeftRecursion = rules[i];
+
+                if (ruleWithoutLeftRecursion.RightPart.Count == 0 )
+                {
+                    continue;
+                }
+
+                Rule newRule;
+                if (ruleWithoutLeftRecursion.RightPart[0] == EmptySymbol)
+                {
+                    newRule = new Rule(rule.Symbol, new List<string>(), new List<string>());
+                    newRule.RightPart.AddRange(newRuleForRemoveLeftRecursion.RightPart);
+
+                    if (rules.FindAll(x => x.RightPart[0] != EmptySymbol).Count == 0)
+                    {
+                        GrammarRules.Insert(GrammarRules.IndexOf(ruleWithoutLeftRecursion) + 1, newRule);
+                    }
+
+                    continue;
+                }
+
+                newRule = new(ruleWithoutLeftRecursion.Symbol, new(ruleWithoutLeftRecursion.RightPart), new(rule.GuideSet)); 
+                newRule.RightPart.Add(newToken);
+
+                GrammarRules[GrammarRules.IndexOf(ruleWithoutLeftRecursion)] = newRule;
+            }
+
+            Rule epsilonRule = new Rule(newToken, new List<string>(){"e"}, new List<string>());
+
+            GrammarRules.Insert(GrammarRules.IndexOf(GrammarRules.FindLast(x => x.Symbol == newToken))+1, epsilonRule);
         }
 
         private static bool HasLeftRecursion(Rule rule)
@@ -168,24 +171,24 @@ public class ReadGrammar
                 var grammarRule = GrammarRules[index];
                 if (0 == grammarRule.GuideSet.Count)
                 {
-                    grammarRule.GuideSet.AddRange(FindDirectionSymbolsForToken(index));
+                    grammarRule.GuideSet.AddRange(FindGuideSetForToken(index));
                 }
             }
         }
 
-        private List<string> FindDirectionSymbolsForToken(int tokenIdx)
+        private List<string> FindGuideSetForToken(int tokenIdx)
         {
             var grammarRule = GrammarRules[tokenIdx];
             var firstChainCharacter = grammarRule.RightPart[0];
 
             if (TokenIsNonTerminal(firstChainCharacter))
             {
-                List<string> result = [];
+                List<string> result = new List<string>();
                 for (int i = 0; i < GrammarRules.Count; i++)
                 {
                     if (GrammarRules[i].Symbol == firstChainCharacter && i != tokenIdx)
                     {
-                        result.AddRange(FindDirectionSymbolsForToken(i));
+                        result.AddRange(FindGuideSetForToken(i));
                     }
                 }
                 
@@ -193,20 +196,20 @@ public class ReadGrammar
             }
            
             
-            return grammarRule.RightPart.Contains(EmptySymbol) ? Follow(grammarRule.Symbol).Distinct().ToList() : [firstChainCharacter];
+            return grammarRule.RightPart.Contains(EmptySymbol) 
+                ? Follow(grammarRule.Symbol).Distinct().ToList()
+                : new List<string>{firstChainCharacter};
         }
 
         List<string> Follow(string token)
         {
-            List<string> dirSymbols = [];
+            var dirSymbols = new List<string>();
 
-            List<Rule> grammarRules = GrammarRules.FindAll(x => x.RightPart.Contains(token) && x.Symbol != token);
+            var grammarRules = GrammarRules.FindAll(x => x.RightPart.Contains(token) && x.Symbol != token);
 
-            for (int i = 0; i < grammarRules.Count; i++)
+            foreach (var grammarRule in grammarRules)
             {
-                var grammarRule = grammarRules[i];
-
-                int idx = grammarRule.RightPart.IndexOf(token);
+                var idx = grammarRule.RightPart.IndexOf(token);
 
                 if (idx == grammarRule.RightPart.Count - 1 || ((idx == grammarRule.RightPart.Count - 2) && (GrammarRules.IndexOf(grammarRule) == 0)))
                 {
@@ -222,12 +225,13 @@ public class ReadGrammar
                 
                 if (idx != grammarRule.RightPart.Count - 1)
                 {
-                    string symbol = grammarRule.RightPart[idx + 1];
+                    var symbol = grammarRule.RightPart[idx + 1];
                     if (TokenIsNonTerminal(symbol))
                     {
-                        List<Rule> gramRules = GrammarRules.FindAll(x => x.Symbol == symbol && x.Symbol != grammarRule.Symbol);
-                        for (int j = 0; j < gramRules.Count; j++)
-                            dirSymbols.AddRange(FindDirectionSymbolsForToken(GrammarRules.IndexOf(gramRules[j])));
+                        var rule = grammarRule;
+                        var gramRules = GrammarRules.FindAll(x => x.Symbol == symbol && x.Symbol != rule.Symbol);
+                        foreach (var gramRule in gramRules)
+                            dirSymbols.AddRange(FindGuideSetForToken(GrammarRules.IndexOf(gramRule)));
                     }
                     else if(symbol == EmptySymbol)
                     {
@@ -245,7 +249,7 @@ public class ReadGrammar
 
         bool TokenIsNonTerminal(string token)
         {
-            foreach (Rule grammarRule in GrammarRules)
+            foreach (var grammarRule in GrammarRules)
             {
                 if (grammarRule.Symbol == token)
                 {
@@ -255,12 +259,12 @@ public class ReadGrammar
             return false;
         }
 
-        private List<string> ParseChainSymbols(string str)
+        private List<string> ParseRightPart(string str)
         {
-            List<string> result = [];
+            var result = new List<string>();
 
-            string accumulated = "";
-            foreach (char ch in str)
+            var accumulated = "";
+            foreach (var ch in str)
             {
                 if ((ch == ' ' || ch == StartTokenCh) && accumulated.Length > 0)
                 {
@@ -285,16 +289,17 @@ public class ReadGrammar
 
             return result;
         }
+
         private void ParseTokens()
         {
-            foreach (string line in _lines)
+            foreach (var line in _lines)
             {
-                int tokenEndPos = line.IndexOf(EndTokenCh);
+                var tokenEndPos = line.IndexOf(EndTokenCh);
                 if (!line.StartsWith(StartTokenCh) || tokenEndPos <= 1)
                 {
-                    throw new Exception("Wrong token format");
+                    throw new Exception("Не верный формат токена");
                 }
-                string token = line[1..tokenEndPos];
+                var token = line[1..tokenEndPos];
                 _tokens.Add(token);
             }
         }

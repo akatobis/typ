@@ -4,7 +4,7 @@ namespace CreateSlrTable.FileWork;
 
 public class WriteTable
 {
-    private const string FilePath = "../../../../Files/output.csv";
+    private const string FilePath = "C:\\volgatech\\typ\\SLR/file.csv";
 
     public void Write(List<string> typeSymbols, List<Row> table)
     {
