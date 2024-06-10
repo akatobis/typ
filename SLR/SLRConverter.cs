@@ -47,6 +47,7 @@ public class CsvParser
         const string firstRow = "0.0";
         const string convolution = "-1";
         const string end = "#";
+        const string empty = "e";
         
         stack.Push(firstRow);
         while (true)
@@ -57,7 +58,6 @@ public class CsvParser
             {
                 return false;
             }
-
             var currState = stack.Peek();
             var token = lexer.PeekCurrToken();
             
@@ -67,13 +67,22 @@ public class CsvParser
             }
             if (table[currState].TryGetValue(token, out string? value))
             {
+                if (value.Length == 0)
+                {
+                    return false;
+                }
                 if (value == ok)
                 {
                     return true;
                 }
                 if (value.Contains(convolution))
                 {
-                    var leftRightValues = value.Split('.');
+                    var firstValue = value.Split('/').First();
+                    if (firstValue == "")
+                    {
+                        return false;
+                    }
+                    var leftRightValues = firstValue.Split('.');
                     if (leftRightValues.Length < 2)
                     {
                         return false;
@@ -81,15 +90,10 @@ public class CsvParser
 
                     var rowNumber = leftRightValues[1];
                     var rule = rules[int.Parse(rowNumber)];
-
-                    if (rule.RightPart.Contains(end) && rowNumber == "0")
-                    {
-                        lexer.AddToken(rule.Symbol);
-                        continue;
-                    }
+                    
                     for (int i = 0; i < rule.RightPart.Count; ++i)
                     {
-                        if (rule.RightPart[i] == end)
+                        if (rule.RightPart[i] == empty || rule.RightPart[i] == end)
                         {
                             break;
                         }
