@@ -37,6 +37,19 @@ public class Row
         return false;
     }
 
+    private static bool RowHasIndex(List<IndexSymbol> indexSymbolList, IndexSymbol searchIndexSymbol)
+    {
+        foreach (var indexSymbol in indexSymbolList)
+        {
+            if (indexSymbol.SymbolNum == searchIndexSymbol.SymbolNum && indexSymbol.RowNum == searchIndexSymbol.RowNum)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public static void AddRow(Row row, List<Row> table, List<Rule> grammar, List<string> typeSymbols)
     {
         foreach (var indexToRowList in row.IndexToRowList)
@@ -76,7 +89,8 @@ public class Row
                     {
                         if (symbol == first.NameSymbol)
                         {
-                            newRow.IndexToRowList[i].Add(first.IndexSymbol);
+                            if (!RowHasIndex(newRow.IndexToRowList[i], first.IndexSymbol))
+                                newRow.IndexToRowList[i].Add(first.IndexSymbol);
                         }
                     }
 
@@ -84,7 +98,8 @@ public class Row
                     {
                         if (symbol == follow.NameSymbol)
                         {
-                            newRow.IndexToRowList[i].Add(follow.IndexSymbol);
+                            if (!RowHasIndex(newRow.IndexToRowList[i], follow.IndexSymbol))
+                                newRow.IndexToRowList[i].Add(follow.IndexSymbol);
                         }
                     }
                 }

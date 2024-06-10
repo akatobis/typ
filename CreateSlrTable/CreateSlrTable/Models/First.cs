@@ -11,6 +11,14 @@ public class First
     public IndexSymbol IndexSymbol { get; set; }
     public string NameSymbol { get; set; }
     
+    private static bool FirstHasInList(First searchFirst, List<First> firstList)
+    {
+        return firstList
+            .Any(first => first.NameSymbol == searchFirst.NameSymbol 
+                          && first.IndexSymbol.SymbolNum == searchFirst.IndexSymbol.SymbolNum 
+                          && first.IndexSymbol.RowNum == searchFirst.IndexSymbol.RowNum);
+    }
+    
 
     public static List<First> FindAllFirst(string notTerminal, List<Rule> grammar)
     {
@@ -22,13 +30,30 @@ public class First
             if (rule.Symbol == notTerminal)
             {
                 var first = rule.RightPart[0];
-                
-                var indexSymbol = new IndexSymbol(i, 1);
-                firstList.Add(new First(indexSymbol, first));
-                
-                if (Rule.IsNotTerminal(first) && first != notTerminal)
+
+                if (first == "e")
                 {
-                    firstList.AddRange(FindAllFirst(first, grammar));
+                    var indexSymbol = new IndexSymbol(-1, 0);
+                    var newFirst = new First(indexSymbol, "#");
+                    if (!FirstHasInList(newFirst, firstList))
+                        firstList.Add(newFirst);
+                }
+                else
+                {
+                    var indexSymbol = new IndexSymbol(i, 1);
+                    var newFirst = new First(indexSymbol, first);
+                    
+                    if (!FirstHasInList(newFirst, firstList))
+                        firstList.Add(newFirst);
+                
+                    if (Rule.IsNotTerminal(first) && first != notTerminal)
+                    {
+                        foreach (var first1 in FindAllFirst(first, grammar))
+                        {
+                            if (!FirstHasInList(first1, firstList))
+                                firstList.Add(first1);
+                        }
+                    }
                 }
             }
         }

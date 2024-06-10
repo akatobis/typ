@@ -31,7 +31,7 @@ public class Rule
 
             foreach (var symbolRightPart in rule.RightPart)
             {
-                if (!symbolList.Contains(symbolRightPart))
+                if (!symbolList.Contains(symbolRightPart) && symbolRightPart != "e")
                 {
                     symbolList.Add(symbolRightPart);
                 }

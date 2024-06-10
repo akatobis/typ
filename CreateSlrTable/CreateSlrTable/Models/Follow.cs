@@ -23,6 +23,7 @@ public class Follow
     {
         var followList = new List<Follow>();
 
+        var j = 0;
         foreach (var rule in grammar)
         {
             for (var i = 0; i < rule.RightPart.Count; i++)
@@ -46,13 +47,28 @@ public class Follow
                 }
                 else
                 {
-                    var newFollow = new Follow(new IndexSymbol(-1, -1), rule.RightPart[i + 1]);
+                    var newFollow = new Follow(new IndexSymbol(-1, j), rule.RightPart[i + 1]);
                     if (!FollowHasInList(newFollow, followList))
                     {
                         followList.Add(newFollow);    
                     }
+
+                    if (Rule.IsNotTerminal(newFollow.NameSymbol))
+                    {
+                        var firstList = First.FindAllFirst(newFollow.NameSymbol, grammar);
+                        foreach (var first in firstList)
+                        {
+                            newFollow = new Follow(new IndexSymbol(-1, j), first.NameSymbol);
+                            if (!FollowHasInList(newFollow, followList))
+                            {
+                                followList.Add(newFollow);
+                            }
+                        }
+                    }
                 }
             }
+
+            j++;
         }
 
         return followList;
@@ -72,7 +88,7 @@ public class Follow
             var indexSymbolFollow = new IndexSymbol(indexSymbol.RowNum, indexSymbol.SymbolNum + 1);
             if (row.RightPart[indexSymbol.SymbolNum] == "#")
             {
-                indexSymbolFollow = new IndexSymbol(-1, -1);
+                indexSymbolFollow = new IndexSymbol(-1, indexSymbol.RowNum);
             }
             var follow = new Follow(indexSymbolFollow, row.RightPart[indexSymbol.SymbolNum]);
             followList.Add(follow);

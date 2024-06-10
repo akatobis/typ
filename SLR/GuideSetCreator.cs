@@ -138,7 +138,14 @@ public class Creator(string inputFileName, string outputFileName)
             var guideSet = new List<string>();
 
             var firstRightPartItem = rule.RightPart[0];
-            if (firstRightPartItem != EmptyTransition) guideSet.Add(firstRightPartItem);
+            if (firstRightPartItem != EmptyTransition)
+            {
+                guideSet.Add(firstRightPartItem);
+            }
+            else
+            {
+                guideSet.Add(EndOfStringMark);
+            }
 
             if (IsNonTerminal(firstRightPartItem))
             {
@@ -160,27 +167,27 @@ public class Creator(string inputFileName, string outputFileName)
     {
         foreach (var rule in grammar)
         {
-            Console.Write($"{rule.Symbol} -> ");
+            _writer.Write($"{rule.Symbol} -> ");
 
             foreach (var rightPartToken in rule.RightPart)
             {
-                Console.Write($"{rightPartToken} ");
+                _writer.Write($"{rightPartToken} ");
             }
 
             if (rule.GuideSet.Count == 0)
             {
-                Console.WriteLine();
+                _writer.WriteLine();
                 continue;
             }
 
-            Console.Write("/ ");
+            _writer.Write("/ ");
             foreach (var guideSetToken in rule.GuideSet)
             {
-                Console.Write(guideSetToken);
-                if (rule.GuideSet.Last() != guideSetToken) Console.Write(", ");
+                _writer.Write(guideSetToken);
+                if (rule.GuideSet.Last() != guideSetToken) _writer.Write(", ");
             }
 
-            Console.WriteLine();
+            _writer.WriteLine();
         }
     }
 }

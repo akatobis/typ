@@ -20,6 +20,7 @@ public class CsvParser
         const string ok = "-2.-2";
         string firstRow = "0.0";
         const string convolution = "-1.-1";
+        const string end = "#";
         
         stack.Push(firstRow);
         while (true)
@@ -37,7 +38,13 @@ public class CsvParser
                 _stackTraceWriter.Write($" '{item}'");
             }
             _stackTraceWriter.WriteLine();
-            
+
+            if (stack.Count == 0)
+            {
+                _stackTraceWriter.Close();
+                _outputWriter.WriteLine("False");
+                break;
+            }
             var currState = stack.Peek();
             var token = lexer.PeekCurrToken();
 
@@ -55,13 +62,28 @@ public class CsvParser
                     _outputWriter.WriteLine("Ok");
                     break;
                 }
-                if (value == convolution)
+                if (value.Contains(convolution))
                 {
                     var rowNumber = currState.Split('.').First();
-                    var rule = rules[int.Parse(rowNumber) - 1];
+                    var rule = rules[int.Parse(rowNumber)];
 
+                    if (rule.RightPart.Contains(end) && rowNumber == "0")
+                    {
+                        lexer.AddToken(rule.Symbol);
+                        continue;
+                    }
                     for (int i = 0; i < rule.RightPart.Count; ++i)
                     {
+                        if (rule.RightPart[i] == end)
+                        {
+                            break;
+                        }
+                        if (stack.Count == 0)
+                        {
+                            _stackTraceWriter.Close();
+                            _outputWriter.WriteLine("False");
+                            return;
+                        }
                         stack.Pop();
                     }
 
