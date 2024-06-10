@@ -19,11 +19,10 @@ public class Follow
                            && follow.IndexSymbol.RowNum == searchFollow.IndexSymbol.RowNum);
     }
 
-    private static List<Follow> FindAllFollow(string searchSymbol, List<Rule> grammar)
+    private static List<Follow> FindAllFollow(string searchSymbol, List<Rule> grammar, int convolutionNum)
     {
         var followList = new List<Follow>();
 
-        var j = 0;
         foreach (var rule in grammar)
         {
             for (var i = 0; i < rule.RightPart.Count; i++)
@@ -37,7 +36,7 @@ public class Follow
 
                 if (i + 1 == rule.RightPart.Count)
                 {
-                    foreach (var newFollow in FindAllFollow(rule.Symbol, grammar))
+                    foreach (var newFollow in FindAllFollow(rule.Symbol, grammar, convolutionNum))
                     {
                         if (!FollowHasInList(newFollow, followList))
                         {
@@ -47,7 +46,7 @@ public class Follow
                 }
                 else
                 {
-                    var newFollow = new Follow(new IndexSymbol(-1, j), rule.RightPart[i + 1]);
+                    var newFollow = new Follow(new IndexSymbol(-1, convolutionNum), rule.RightPart[i + 1]);
                     if (!FollowHasInList(newFollow, followList))
                     {
                         followList.Add(newFollow);    
@@ -58,7 +57,7 @@ public class Follow
                         var firstList = First.FindAllFirst(newFollow.NameSymbol, grammar);
                         foreach (var first in firstList)
                         {
-                            newFollow = new Follow(new IndexSymbol(-1, j), first.NameSymbol);
+                            newFollow = new Follow(new IndexSymbol(-1, convolutionNum), first.NameSymbol);
                             if (!FollowHasInList(newFollow, followList))
                             {
                                 followList.Add(newFollow);
@@ -67,8 +66,6 @@ public class Follow
                     }
                 }
             }
-
-            j++;
         }
 
         return followList;
@@ -81,7 +78,7 @@ public class Follow
 
         if (row.RightPart.Count == indexSymbol.SymbolNum)
         {
-            followList.AddRange(FindAllFollow(row.Symbol, grammar));
+            followList.AddRange(FindAllFollow(row.Symbol, grammar, indexSymbol.RowNum));
         }
         else
         {
