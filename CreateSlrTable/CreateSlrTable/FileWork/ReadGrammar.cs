@@ -4,7 +4,7 @@ namespace CreateSlrTable.FileWork;
 
 public class ReadGrammar
 {
-    private const string FilePath = "../../../../Files/test2.txt";
+    private const string FilePath = "../../../../Files/test4.txt";
 
     public List<Rule> Read()
     {
