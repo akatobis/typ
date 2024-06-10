@@ -27,32 +27,32 @@ public class First
         for (var i = 0; i < grammar.Count; i++)
         {
             var rule = grammar[i];
-            if (rule.Symbol == notTerminal)
-            {
-                var first = rule.RightPart[0];
+            if (rule.Symbol != notTerminal) 
+                continue;
+            
+            var first = rule.RightPart[0];
 
-                if (first == "e")
-                {
-                    var indexSymbol = new IndexSymbol(-1, 0);
-                    var newFirst = new First(indexSymbol, "#");
-                    if (!FirstHasInList(newFirst, firstList))
-                        firstList.Add(newFirst);
-                }
-                else
-                {
-                    var indexSymbol = new IndexSymbol(i, 1);
-                    var newFirst = new First(indexSymbol, first);
+            if (first == "e")
+            {
+                var indexSymbol = new IndexSymbol(-1, i);
+                var newFirst = new First(indexSymbol, "#");
+                if (!FirstHasInList(newFirst, firstList))
+                    firstList.Add(newFirst);
+            }
+            else
+            {
+                var indexSymbol = new IndexSymbol(i, 1);
+                var newFirst = new First(indexSymbol, first);
                     
-                    if (!FirstHasInList(newFirst, firstList))
-                        firstList.Add(newFirst);
+                if (!FirstHasInList(newFirst, firstList))
+                    firstList.Add(newFirst);
                 
-                    if (Rule.IsNotTerminal(first) && first != notTerminal)
+                if (Rule.IsNotTerminal(first) && first != notTerminal)
+                {
+                    foreach (var first1 in FindAllFirst(first, grammar))
                     {
-                        foreach (var first1 in FindAllFirst(first, grammar))
-                        {
-                            if (!FirstHasInList(first1, firstList))
-                                firstList.Add(first1);
-                        }
+                        if (!FirstHasInList(first1, firstList))
+                            firstList.Add(first1);
                     }
                 }
             }
