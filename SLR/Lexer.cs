@@ -37,12 +37,12 @@ public class Lexer
                     continue;
                 }
 
-                if (wordT.First() == '_' && wordT.Length > 1 ||
+                /*if (wordT.First() == '_' && wordT.Length > 1 ||
                     char.IsLetter(wordT.First()))
                 {
                     _tokens.Add(IdToken);
                     continue;
-                }
+                }*/
 
                 if (wordT.Length >= 2 && wordT.First() == QuotationMark && wordT.Last() == QuotationMark)
                 {
