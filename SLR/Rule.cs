@@ -16,6 +16,13 @@ public class Rule
         GuideSet = new List<string>();
     }
     
+    public Rule(Rule rule)
+    {
+        Symbol = new string(rule.Symbol);
+        RightPart = new List<string>(rule.RightPart);
+        GuideSet = new List<string>(rule.GuideSet);
+    }
+    
     public string Symbol { get; set; }
     public List<string> RightPart { get; set; }
     public List<string> GuideSet { get; set; }

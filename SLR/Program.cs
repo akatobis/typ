@@ -15,6 +15,6 @@ class Program
         
         creator.AddGuideSetToGrammar();
         var grammar = creator.GetGrammar();
-        csvParser.ProcessInputSequence(lexer, grammar);
+            //csvParser.ProcessInputSequence(lexer, grammar);
     }
 }
