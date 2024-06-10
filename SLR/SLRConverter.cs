@@ -17,54 +17,69 @@ public class CsvParser
 
     public void ProcessInputSequence(Lexer lexer, List<Rule> rules)
     {
+         var resultMsg = ProcessInput(lexer, rules, _stackTraceWriter) ? "Ok" : "False";
+         
+        _stackTraceWriter.Close();
+        _outputWriter.WriteLine(resultMsg);
+        _outputWriter.Close();
+    }
+
+    private void WriteStackTrace(StreamWriter stackTraceWriter, Lexer lexer)
+    {
+        stackTraceWriter.Write("Remaining tokens:");
+        var remainingTokens = lexer.GetRemainingTokens(); 
+        foreach (var remainingToken in remainingTokens)
+        {
+            stackTraceWriter.Write($" '{remainingToken}'");
+        }
+        stackTraceWriter.WriteLine();
+        stackTraceWriter.Write("Stack:");
+        foreach (var item in stack)
+        {
+            stackTraceWriter.Write($" '{item}'");
+        }
+        stackTraceWriter.WriteLine();
+    }
+    
+    private bool ProcessInput(Lexer lexer, List<Rule> rules, StreamWriter stackTraceWriter)
+    {
         const string ok = "-2.-2";
-        string firstRow = "0.0";
-        const string convolution = "-1.-1";
+        const string firstRow = "0.0";
+        const string convolution = "-1";
         const string end = "#";
         
         stack.Push(firstRow);
         while (true)
         {
-            _stackTraceWriter.Write("Remaining tokens:");
-            var remainingTokens = lexer.GetRemainingTokens(); 
-            foreach (var remainingToken in remainingTokens)
-            {
-                _stackTraceWriter.Write($" '{remainingToken}'");
-            }
-            _stackTraceWriter.WriteLine();
-            _stackTraceWriter.Write("Stack:");
-            foreach (var item in stack)
-            {
-                _stackTraceWriter.Write($" '{item}'");
-            }
-            _stackTraceWriter.WriteLine();
+            WriteStackTrace(stackTraceWriter, lexer);
 
             if (stack.Count == 0)
             {
-                _stackTraceWriter.Close();
-                _outputWriter.WriteLine("False");
-                break;
+                return false;
             }
+
             var currState = stack.Peek();
             var token = lexer.PeekCurrToken();
-
+            
             if (token == null)
             {
-                _stackTraceWriter.Close();
-                _outputWriter.WriteLine("False");
-                break;
+                return false;
             }
             if (table[currState].TryGetValue(token, out string? value))
             {
                 if (value == ok)
                 {
-                    _stackTraceWriter.Close();
-                    _outputWriter.WriteLine("Ok");
-                    break;
+                    return true;
                 }
                 if (value.Contains(convolution))
                 {
-                    var rowNumber = currState.Split('.').First();
+                    var leftRightValues = value.Split('.');
+                    if (leftRightValues.Length < 2)
+                    {
+                        return false;
+                    }
+
+                    var rowNumber = leftRightValues[1];
                     var rule = rules[int.Parse(rowNumber)];
 
                     if (rule.RightPart.Contains(end) && rowNumber == "0")
@@ -80,9 +95,7 @@ public class CsvParser
                         }
                         if (stack.Count == 0)
                         {
-                            _stackTraceWriter.Close();
-                            _outputWriter.WriteLine("False");
-                            return;
+                            return false;
                         }
                         stack.Pop();
                     }
@@ -95,12 +108,9 @@ public class CsvParser
                 stack.Push(value);
                 continue;
             }
-            
-            _stackTraceWriter.Close();
-            _outputWriter.WriteLine("False");
-            break;
+
+            return false;
         }
-        _outputWriter.Close();
     }
 
     private Dictionary<string, Dictionary<string, string>> ReadCsvFile(string filePath)

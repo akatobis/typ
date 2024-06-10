@@ -1,7 +1,7 @@
 <S> -> <A> <B> <C> 
-<A> -> <A> a
+<A> -> <A> char
 <A> -> e
-<B> -> <B> b
+<B> -> <B> char
 <B> -> e
-<C> -> <C> c
+<C> -> <C> char
 <C> -> e
