@@ -11,6 +11,12 @@ class Program
         CsvParser csvParser = new CsvParser(filePath, stackTraceFileName, outputFileName);
 
         Lexer lexer = new Lexer("inputLexer.txt");
+        string? token;
+        while ((token = lexer.GetNextToken()) != null)
+        {
+            Console.WriteLine(token);
+        }
+        
         Creator creator = new Creator("inputGrammar.txt", "outputGrammar.txt");
         
         creator.AddGuideSetToGrammar();
