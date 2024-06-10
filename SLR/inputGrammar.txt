@@ -1,7 +1,7 @@
-<S> -> <A> <B> <C> 
-<A> -> <A> char
+<S> -> <A> <B> <C>
+<A> -> <A> id
 <A> -> e
-<B> -> <B> char
+<B> -> <B> id
 <B> -> e
-<C> -> <C> char
+<C> -> <C> id
 <C> -> e

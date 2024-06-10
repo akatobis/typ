@@ -7,13 +7,13 @@ var readTable = new ReadTable();
 
 var writeResult = new WriteResult();
 
-if (args.Length != 1)
+/*if (args.Length != 1)
 {
     Console.WriteLine($"Invalid parameters.\nUsage: Runerok.exe <inputExpression.txt>");
     return 1;
-}
+}*/
 
-var lexer = new Lexer(args[0]);
+var lexer = new Lexer("../../../../Files/expression.txt");
 var tableLL1 = readTable.Read();
 
 var currRowIndex = 0;

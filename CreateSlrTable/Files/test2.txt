@@ -1,15 +1,15 @@
-<S1> -> <S> # / <S>, <A>, a, <B>, b, <C>, c
-<S> -> <A> <B> <C> / <A>, a
-<A> -> <A> a / <A>, a
-<B> -> <B> b / <B>, b
-<C> -> <C> c / <C>, c
-<S> -> <B> <C> / <B>, b
-<A> -> a / a
-<S> -> <A> <C> / <A>, a
-<B> -> b / b
-<S> -> <C> / <C>, c
-<S> -> <A> <B> / <A>, a
-<C> -> c / c
-<S> -> <B> / <B>, b
-<S> -> <A> / <A>, a
+<S1> -> <S> # / <S>, <A>, id, <B>, <C>
+<S> -> <A> <B> <C> / <A>, id
+<A> -> <A> id / <A>, id
+<B> -> <B> id / <B>, id
+<C> -> <C> id / <C>, id
+<S> -> <B> <C> / <B>, id
+<A> -> id / id
+<S> -> <A> <C> / <A>, id
+<B> -> id / id
+<S> -> <C> / <C>, id
+<S> -> <A> <B> / <A>, id
+<C> -> id / id
+<S> -> <B> / <B>, id
+<S> -> <A> / <A>, id
 <S> -> e / #

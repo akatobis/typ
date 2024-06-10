@@ -1,4 +1,0 @@
-Remaining tokens: '#'
-Stack: '0.0'
-Remaining tokens: '<S1>' '#'
-Stack:
